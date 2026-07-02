@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Next.js build output
+.next/
+out/
+
+# Slidev build output
+slides/dist/
+
+# Environment variables
+.env.local
+
+# OS / Editor
+.DS_Store
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Test files
+test-*.js
