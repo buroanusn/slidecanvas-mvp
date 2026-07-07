@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "slidecanvas": {
+      "command": "node",
+      "args": [
+        "${workspaceFolder}/mcp/dist/index.js"
+      ],
+      "env": {
+        "SLIDECANVAS_WORKSPACE": "${workspaceFolder}/.slidecanvas/projects"
+      }
+    }
+  }
+}
