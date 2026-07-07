@@ -3,10 +3,10 @@
     "slidecanvas": {
       "command": "node",
       "args": [
-        "${workspaceFolder}/mcp/dist/index.js"
+        "/Users/chenyang/Agent_workspace/TRAE/slidecanvas-mvp/mcp/dist/index.js"
       ],
       "env": {
-        "SLIDECANVAS_WORKSPACE": "${workspaceFolder}/.slidecanvas/projects"
+        "SLIDECANVAS_WORKSPACE": "/Users/chenyang/Agent_workspace/TRAE/slidecanvas-mvp/.slidecanvas/projects"
       }
     }
   }
