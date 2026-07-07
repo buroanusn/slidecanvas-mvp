@@ -154,6 +154,74 @@ OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxx
 | Day 5 | 加布局和主题：封面/标准/双栏布局 + 主题切换 |
 | Day 6 | 导出与存储：localStorage 持久化 + 独立 HTML 导出 |
 | Day 7 | AI 辅助：选中文字一键扩写（OpenAI + 降级模式） |
+| Day 8 | MCP 服务器：开放完整 MCP 接口，支持 AI Agent 创建和导出演示文稿 |
+
+
+### MCP 服务器（AI Agent 接入）
+
+SlideCanvas 提供了完整的 MCP (Model Context Protocol) 服务器，任何支持 MCP 的 AI Agent（如 Claude Desktop、TRAE、Cursor 等）都可以通过它来创建和管理演示文稿。
+
+#### 开放的 Tools
+
+| 工具名 | 功能 | 关键参数 |
+|--------|------|----------|
+| `create_project` | 创建新演示项目 | title, project_id |
+| `load_project` | 加载已有项目 | project_id |
+| `add_slides` | 批量添加幻灯片（支持标题/列表/代码块） | project_id, slides[] |
+| `set_layout` | 设置单页布局（cover/default/two-cols） | project_id, page_index, layout |
+| `set_theme` | 设置全局主题（default/seriph） | project_id, theme |
+| `ai_expand` | AI 扩写内容（bullet point 风格） | text, context |
+| `export_markdown` | 导出为 Slidev Markdown | project_id |
+| `export_html` | 导出为独立 HTML 文件 | project_id, save_to_file |
+| `list_projects` | 列出所有项目 | - |
+| `delete_project` | 删除项目 | project_id |
+
+#### 快速配置
+
+**1. 安装并构建**
+
+```bash
+cd mcp && npm install && npx tsc
+```
+
+**2. 配置到 Claude Desktop**
+
+编辑 `~/Library/Application Support/Claude/claude_desktop_config.json`：
+
+```json
+{
+  "mcpServers": {
+    "slidecanvas": {
+      "command": "node",
+      "args": ["/absolute/path/to/slidecanvas-mvp/mcp/dist/index.js"],
+      "env": {
+        "OPENAI_API_KEY": "sk-your-key",
+        "SLIDECANVAS_WORKSPACE": "~/.slidecanvas/projects"
+      }
+    }
+  }
+}
+```
+
+**3. 配置到 TRAE / 其他 MCP 客户端**
+
+```json
+{
+  "slidecanvas": {
+    "command": "node",
+    "args": ["/absolute/path/to/slidecanvas-mvp/mcp/dist/index.js"]
+  }
+}
+```
+
+#### Agent 使用示例
+
+1. 调用 `create_project` 创建项目（传入标题）
+2. 调用 `add_slides` 添加幻灯片内容（每页一个 H1 标题 + 列表/代码）
+3. 调用 `set_layout` 设置封面页布局为 cover
+4. 调用 `export_html`（save_to_file=true）导出独立 HTML 文件
+
+> 项目数据存储在本地文件系统，通过 `SLIDECANVAS_WORKSPACE` 环境变量控制存储路径。
 
 ### License
 
@@ -307,6 +375,74 @@ OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxx
 | Day 5 | Layouts & themes: Cover/Default/Two-Columns + theme switching |
 | Day 6 | Export & storage: localStorage persistence + standalone HTML export |
 | Day 7 | AI assistant: Select text and one-click AI expansion (OpenAI + fallback) |
+| Day 8 | MCP server: Full MCP interface for AI agents to create and export presentations |
+
+
+### MCP Server (AI Agent Integration)
+
+SlideCanvas provides a complete MCP (Model Context Protocol) server, enabling any MCP-compatible AI agent (Claude Desktop, TRAE, Cursor, etc.) to create and manage presentations programmatically.
+
+#### Available Tools
+
+| Tool | Description | Key Parameters |
+|------|-------------|----------------|
+| `create_project` | Create a new presentation project | title, project_id |
+| `load_project` | Load an existing project | project_id |
+| `add_slides` | Add slides (headings, bullets, code blocks) | project_id, slides[] |
+| `set_layout` | Set page layout (cover/default/two-cols) | project_id, page_index, layout |
+| `set_theme` | Set global theme (default/seriph) | project_id, theme |
+| `ai_expand` | AI content expansion (bullet-point style) | text, context |
+| `export_markdown` | Export as Slidev Markdown | project_id |
+| `export_html` | Export as standalone HTML file | project_id, save_to_file |
+| `list_projects` | List all projects | - |
+| `delete_project` | Delete a project | project_id |
+
+#### Quick Setup
+
+**1. Install and build**
+
+```bash
+cd mcp && npm install && npx tsc
+```
+
+**2. Configure for Claude Desktop**
+
+Edit `~/Library/Application Support/Claude/claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "slidecanvas": {
+      "command": "node",
+      "args": ["/absolute/path/to/slidecanvas-mvp/mcp/dist/index.js"],
+      "env": {
+        "OPENAI_API_KEY": "sk-your-key",
+        "SLIDECANVAS_WORKSPACE": "~/.slidecanvas/projects"
+      }
+    }
+  }
+}
+```
+
+**3. Configure for TRAE / other MCP clients**
+
+```json
+{
+  "slidecanvas": {
+    "command": "node",
+    "args": ["/absolute/path/to/slidecanvas-mvp/mcp/dist/index.js"]
+  }
+}
+```
+
+#### Agent Workflow Example
+
+1. Call `create_project` with a title
+2. Call `add_slides` to add content (each slide = H1 heading + bullets/code)
+3. Call `set_layout` to set cover layout for the first page
+4. Call `export_html` (save_to_file=true) to generate a standalone HTML file
+
+> Project data is stored on the local filesystem. Use the `SLIDECANVAS_WORKSPACE` env var to control the storage path.
 
 ### License
 
